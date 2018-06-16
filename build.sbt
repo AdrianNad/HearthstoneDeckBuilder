@@ -8,4 +8,12 @@ scalaVersion := "2.12.6"
 libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.144-R12"
 libraryDependencies += "org.scalafx" %% "scalafxml-core-sfx8" % "0.3"
 
+libraryDependencies ++= Seq(
+  "com.typesafe.slick" %% "slick" % "3.2.1",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.2.1",
+  "com.typesafe.slick" %% "slick-codegen" % "3.2.1",
+  "org.slf4j" % "slf4j-nop" % "1.7.19",
+  "mysql" % "mysql-connector-java" % "5.1.34"
+)
+
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)

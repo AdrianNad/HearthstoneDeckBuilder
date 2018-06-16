@@ -1,0 +1,21 @@
+package com.model
+
+import scala.concurrent.Future
+import slick.jdbc.MySQLProfile.api._
+
+
+trait InitialData {
+
+  self: DatabaseSchema =>
+
+  def db: Database
+
+  def insertInitialData(): Future[Unit] = {
+    val queries = DBIO.seq(
+      decks.delete,
+      decks += Deck(1, "Deck 1"),
+      decks += Deck(2, "Deck 2")
+    )
+    db.run(queries)
+  }
+}
