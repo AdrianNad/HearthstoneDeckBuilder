@@ -1,13 +1,31 @@
 package com
 
 import java.io.IOException
+
+import com.model.{DatabaseSchema, InitialData, Magic}
+import slick.basic.DatabaseConfig
+import slick.driver.MySQLDriver
+import slick.jdbc.MySQLProfile
+
 import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
-import scalafxml.core.{NoDependencyResolver, FXMLView}
+import scalafxml.core.{FXMLView, NoDependencyResolver}
+import slick.jdbc.MySQLProfile.api._
 
-object HearthstoneDeckBuilderApp extends JFXApp {
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+import concurrent.ExecutionContext.Implicits.global
+
+object HearthstoneDeckBuilderApp extends JFXApp with DatabaseSchema with InitialData with Magic {
+
+  //val db = Database.forConfig("db")
+  val dbConfig: DatabaseConfig[MySQLProfile] = DatabaseConfig.forConfig("db")
+  val db = dbConfig.db
+
+  private val future = createSchemaIfNotExists.flatMap(_ => insertInitialData())
+  Await.ready(future, Duration.Inf)
 
   val resource = getClass.getResource("fxml/MainWindow.fxml")
   if (resource == null) {
