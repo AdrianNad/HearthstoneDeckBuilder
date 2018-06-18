@@ -10,7 +10,9 @@ import scalafx.scene.Scene
 import scalafx.stage.WindowEvent
 import scalafxml.core.{FXMLView, NoDependencyResolver}
 import slick.basic.DatabaseConfig
-import slick.jdbc.MySQLProfile
+import slick.jdbc.MySQLProfile.api._
+//import slick.jdbc.H2Profile.api._
+import slick.driver.JdbcProfile
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -18,12 +20,10 @@ import scala.concurrent.duration.Duration
 
 object HearthstoneDeckBuilderApp extends JFXApp with DatabaseSchema with InitialData with Magic {
 
-  //val db = Database.forConfig("db")
-  val dbConfig: DatabaseConfig[MySQLProfile] = DatabaseConfig.forConfig("db")
-  val db = dbConfig.db
-
+  val db = Database.forConfig("mysql")
   private val future = createSchemaIfNotExists.flatMap(_ => insertInitialData())
   Await.ready(future, Duration.Inf)
+  db.close()
 
   val resource = getClass.getResource("/fxml/MainWindow.fxml")
   if (resource == null) {

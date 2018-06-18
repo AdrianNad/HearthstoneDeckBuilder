@@ -1,6 +1,7 @@
 package com.model
 
 import slick.jdbc.MySQLProfile.api._
+//import slick.jdbc.H2Profile.api._
 
 trait DatabaseSchema {
 
