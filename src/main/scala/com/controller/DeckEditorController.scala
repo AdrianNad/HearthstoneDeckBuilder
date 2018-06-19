@@ -1,6 +1,7 @@
 package com.controller
 
 import com.model.Card
+
 import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.{TableColumn, TableRow, TableView}
@@ -8,7 +9,8 @@ import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
 import scalafx.Includes._
-import scalafx.scene.Node
+import scalaj.http.Http
+import spray.json.{JsValue, _}
 
 @sfxml
 class DeckEditorController(protected var deckTableView: TableView[Card], protected val cardImageView: ImageView) {
@@ -59,4 +61,26 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
 
     call(tv)
   }
+
+  var response = Http("https://irythia-hs.p.mashape.com/cards")
+    .header("X-Mashape-Key", "UdPl9JESCImshHjThNPHpjkGtMqkp1azcuGjsnMjcx078Gd7Z0").asString
+  //  println(response.body)
+  val json: JsValue = response.body.parseJson
+  val jsonArray: JsArray = json.asInstanceOf[JsArray]
+  jsonArray.elements.foreach(x => {
+    val fields = x.asInstanceOf[JsObject].fields
+    val cardClass = fields.getOrElse("card_class", "").toString
+    if (cardClass == "Warrior" || cardClass == "null") {
+      val name = fields.getOrElse("name", "name").toString
+      val rarity = fields.getOrElse("rarity", "rarity").toString
+      val cost = fields.getOrElse("cost", "0").toString.toInt
+      val img = fields.getOrElse("img", "").toString
+      println("item")
+      if (img != "") {
+//        var card: Card = new Card(name, cost, rarity, new Image(img), 0)
+      } else {
+//        var card: Card = new Card(name, cost, rarity, new Image("https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png"), 0)
+      }
+    }
+  })
 }
