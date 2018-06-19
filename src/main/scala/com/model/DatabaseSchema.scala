@@ -10,7 +10,7 @@ trait DatabaseSchema {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("className")
 
-    def * = (id, name) <>(Deck.tupled, Deck.unapply)
+    def * = (id.?, name) <>(Deck.tupled, Deck.unapply)
   }
 
   val decks = TableQuery[Decks]

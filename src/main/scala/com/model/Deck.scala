@@ -1,4 +1,4 @@
 package com.model
 
 
-case class Deck(id: Long, className: String)
+case class Deck(id: Option[Long] = None, className: String)
