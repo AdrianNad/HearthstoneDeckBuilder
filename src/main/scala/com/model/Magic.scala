@@ -32,4 +32,12 @@ trait Magic {
       }
     )
   }
+
+  def createSchema: Future[Unit] = {
+    db.run(MTable.getTables).flatMap(tables =>
+      db.run(allSchemas.create).andThen {
+        case Success(_) => println("Schemas created\n")
+      }
+    )
+  }
 }
