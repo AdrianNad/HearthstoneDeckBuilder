@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
@@ -28,10 +29,12 @@
         </tabs>
       </TabPane>
       <TableView fx:id="deckTableView" layoutX="354.0" layoutY="97.0" prefHeight="362.0" prefWidth="200.0" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
-      <ImageView fx:id="cardImageView" fitHeight="370.0" fitWidth="274.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
+      <ImageView fx:id="cardImageView" fitHeight="310.0" fitWidth="274.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
       <Label fx:id="cardCounterLabel" layoutX="912.0" layoutY="377.0" text="0" />
       <Label layoutX="833.0" layoutY="378.0" text="Liczba kart" />
       <Button layoutX="771.0" layoutY="373.0" mnemonicParsing="false" onAction="#savePressed" text="save" />
       <Button layoutX="724.0" layoutY="373.0" mnemonicParsing="false" onAction="#clearPressed" text="clear" />
+      <TextField fx:id="textFieldName" layoutX="41.0" layoutY="361.0" />
+      <Button layoutX="201.0" layoutY="361.0" mnemonicParsing="false" onAction="#searchPressed" text="Search" />
    </children>
 </AnchorPane>

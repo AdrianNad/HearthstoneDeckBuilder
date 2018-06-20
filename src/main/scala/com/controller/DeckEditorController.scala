@@ -15,10 +15,12 @@ import spray.json.{JsValue, _}
 
 @sfxml
 class DeckEditorController(protected var deckTableView: TableView[Card], protected val cardImageView: ImageView
-                           , protected var cardSearchTableView: TableView[Card], protected var cardCounterLabel: Label) extends DeckEditorControllerInterface {
+                           , protected var cardSearchTableView: TableView[Card], protected var cardCounterLabel: Label
+                           , protected var textFieldName: TextField) extends DeckEditorControllerInterface {
   var deckCardCounter: Int = 0
   var playerClass: String = _
   val database: FullyPreparedMethodsService = new FullyPreparedMethodsService
+  var allCards: ObservableBuffer[Card] = _
   def prepareTables(): Unit = {
     val tableColumnName: TableColumn[Card, String] = new TableColumn[Card, String]("name")
     tableColumnName.cellValueFactory = {
@@ -148,6 +150,7 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
         }
       }
     })
+    allCards = cardsAll
     cardSearchTableView.items = cardsAll
   }
 
@@ -170,5 +173,16 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
   def clearPressed(): Unit = {
     deckTableView.getItems.clear()
     deckCardCounter = 0
+  }
+
+  def searchPressed(): Unit = {
+    println(textFieldName.getText())
+    var searchedCards: ObservableBuffer[Card] = new ObservableBuffer[Card]()
+    allCards.foreach(card => {
+      if (card.name_.toLowerCase().contains(textFieldName.getText())) {
+        searchedCards.add(card)
+      }
+    })
+    cardSearchTableView.setItems(searchedCards)
   }
 }
