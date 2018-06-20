@@ -139,12 +139,14 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
         val rarity = fields.getOrElse("rarity", "rarity").toString.replace("\"", "")
         val cost = fields.getOrElse("cost", "0").toString.toInt
         val img = fields.getOrElse("img", "").toString.replace("\"", "")
+        val attack = fields.getOrElse("attack", "0").toString.toInt
+        val health = fields.getOrElse("health", "0").toString.toInt
         if (img != "") {
-          var card: Card = new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = img, count_ = 0)
+          var card: Card = new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = img, count_ = 0, attack_ = attack, health_ = health)
           cardsAll add card
         } else {
-          var card: Card = new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", count_ = 0)
-          cardsAll add new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", count_ = 0)
+          var card: Card = new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", count_ = 0, attack_ = attack, health_ = health)
+          cardsAll add new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", count_ = 0, attack_ = attack, health_ = health)
         }
       }
     })
