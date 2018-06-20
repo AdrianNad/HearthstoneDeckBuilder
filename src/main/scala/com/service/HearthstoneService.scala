@@ -37,4 +37,11 @@ class HearthstoneService(db: Database) extends DatabaseSchema {
     val query = cardsReturningId += card
     db.run(query)
   }
+
+  def deleteCardFromDeck(deckId: Long): Future[Int] = {
+    val query = for {
+      c <- cards.filter(_.deckId === deckId)
+    } yield c
+    db.run(query.delete)
+  }
 }

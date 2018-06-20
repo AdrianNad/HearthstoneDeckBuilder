@@ -38,4 +38,12 @@ class FullyPreparedMethodsService {
     }
   }
 
+  def deleteCardsFromDeck(className: String): Unit = {
+    val cardsToDelete: Seq[Card] = getCardsFromDeck(className)
+
+    for (card <- cardsToDelete) {
+      Await.ready(hearthstoneService.deleteCardFromDeck(card.deckId.get), Duration.Inf)
+    }
+  }
+
 }
