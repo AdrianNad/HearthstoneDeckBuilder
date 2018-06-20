@@ -22,10 +22,12 @@ trait DatabaseSchema {
     def rarity = column[String]("rarity_")
     def image = column[String]("image_")
     def count = column[Int]("count_")
+    def attack = column[Int]("attack_")
+    def health = column[Int]("health_")
     def deckId = column[Long]("deckId")
     def deck = foreignKey("fk_deck", deckId, decks)(_.id)
 
-    def * = (id.?, name, cost, rarity, image, count, deckId.?) <> (Card.tupled, Card.unapply)
+    def * = (id.?, name, cost, rarity, image, count, attack, health, deckId.?) <> (Card.tupled, Card.unapply)
   }
 
   val cards = TableQuery[Cards]
