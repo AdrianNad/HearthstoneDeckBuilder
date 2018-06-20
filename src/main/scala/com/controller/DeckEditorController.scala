@@ -15,7 +15,7 @@ import scalaj.http.Http
 @sfxml
 class DeckEditorController(protected var deckTableView: TableView[Card], protected val cardImageView: ImageView) {
 
-  val cards = ObservableBuffer[Card](
+  val cards = Seq[Card](
     new Card("Alexstrasza ", 9, "legendary"
       , "https://d1u5p3l4wpay3k.cloudfront.net/hearthstone_gamepedia/thumb/b/b4/Alexstrasza%28303%29.png/200px-Alexstrasza%28303%29.png?version=c2e14cd0f7beca42513d8100860acb27", 1),
     new Card("Deathwing ", 10, "legendary"
@@ -33,9 +33,8 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
   tableColumnCount.cellValueFactory = {
     _.value.count
   }
-  deckTableView.getColumns.addAll(tableColumnName, tableColumnCost, tableColumnCount)
-  deckTableView.items = cards
 
+  deckTableView.getColumns.addAll(tableColumnName, tableColumnCost, tableColumnCount)
   deckTableView.rowFactory = (tv) => {
     def call(tv: TableView[Card]): TableRow[Card] = {
       var row = new TableRow[Card]()
@@ -75,7 +74,6 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
       val rarity = fields.getOrElse("rarity", "rarity").toString
       val cost = fields.getOrElse("cost", "0").toString.toInt
       val img = fields.getOrElse("img", "").toString
-      println("item")
       if (img != "") {
         var card: Card = new Card(name, cost, rarity, img, 0)
       } else {
@@ -83,4 +81,12 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
       }
     }
   })
+  fillTable()
+  def fillTable(): Unit = {
+    val cardsAll = ObservableBuffer[Card]()
+    cards.foreach(c => {
+      cardsAll add c
+    })
+    deckTableView.items = cardsAll
+  }
 }
