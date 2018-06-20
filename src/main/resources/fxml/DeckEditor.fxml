@@ -9,9 +9,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="941.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controller.DeckEditorController">
+<AnchorPane prefHeight="400.0" prefWidth="1053.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controller.DeckEditorController">
    <children>
-      <TabPane layoutX="300.0" layoutY="7.0" prefHeight="387.0" prefWidth="416.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutX="300.0" layoutY="7.0" prefHeight="387.0" prefWidth="416.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="300.0">
         <tabs>
           <Tab text="Deck editor">
             <content>
@@ -28,7 +28,7 @@
           </Tab>
         </tabs>
       </TabPane>
-      <TableView fx:id="deckTableView" layoutX="354.0" layoutY="97.0" prefHeight="362.0" prefWidth="200.0" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
+      <TableView fx:id="deckTableView" layoutX="354.0" layoutY="97.0" prefHeight="350.0" prefWidth="297.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="750.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0" />
       <ImageView fx:id="cardImageView" fitHeight="310.0" fitWidth="274.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
       <Label fx:id="cardCounterLabel" layoutX="912.0" layoutY="377.0" text="0" />
       <Label layoutX="833.0" layoutY="378.0" text="Liczba kart" />

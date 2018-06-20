@@ -34,6 +34,14 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
     tableColumnCount.cellValueFactory = {
       _.value.count
     }
+    val tableColumnAttack: TableColumn[Card, String] = new TableColumn[Card, String]("attack")
+    tableColumnAttack.cellValueFactory = {
+      _.value.attack
+    }
+    val tableColumnHealth: TableColumn[Card, String] = new TableColumn[Card, String]("health")
+    tableColumnHealth.cellValueFactory = {
+      _.value.health
+    }
 
     val tableColumnNameCard: TableColumn[Card, String] = new TableColumn[Card, String]("name")
     tableColumnNameCard.cellValueFactory = {
@@ -43,8 +51,16 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
     tableColumnCostCard.cellValueFactory = {
       _.value.cost
     }
-    deckTableView.getColumns.addAll(tableColumnName, tableColumnCost, tableColumnCount)
-    cardSearchTableView.getColumns.addAll(tableColumnNameCard, tableColumnCostCard)
+    val tableColumnAttackCard: TableColumn[Card, String] = new TableColumn[Card, String]("attack")
+    tableColumnAttackCard.cellValueFactory = {
+      _.value.attack
+    }
+    val tableColumnHealthCard: TableColumn[Card, String] = new TableColumn[Card, String]("health")
+    tableColumnHealthCard.cellValueFactory = {
+      _.value.health
+    }
+    deckTableView.getColumns.addAll(tableColumnName, tableColumnCost, tableColumnCount, tableColumnAttack, tableColumnHealth)
+    cardSearchTableView.getColumns.addAll(tableColumnNameCard, tableColumnCostCard, tableColumnAttackCard, tableColumnHealthCard)
 
     deckTableView.rowFactory = (tv) => {
       def call(tv: TableView[Card]): TableRow[Card] = {
