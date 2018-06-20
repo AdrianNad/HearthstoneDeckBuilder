@@ -2,8 +2,8 @@ package com
 
 import java.io.IOException
 
-import com.model.{DatabaseSchema, Deck, InitialData, Magic}
-import com.service.HearthstoneService
+import com.model._
+import com.service.{FullyPreparedMethodsService, HearthstoneService}
 
 import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
@@ -15,7 +15,7 @@ import slick.basic.DatabaseConfig
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.Future
-import scala.util.Success
+import scala.util.{Success, Try}
 //import slick.jdbc.H2Profile.api._
 import slick.driver.JdbcProfile
 
@@ -28,13 +28,14 @@ object HearthstoneDeckBuilderApp extends JFXApp with DatabaseSchema with Initial
   val db = Database.forConfig("mysql")
   private val future = createSchemaIfNotExists.flatMap(_ => insertInitialData())
   Await.ready(future, Duration.Inf)
-
-  private val hearthstoneService = new HearthstoneService(db)
-  val newDeck = Deck(className = "new deck")
-  hearthstoneService.addDeck(newDeck).andThen {
-    case Success(_) => println("Deck added")
-  }
   db.close()
+
+  val service: FullyPreparedMethodsService = new FullyPreparedMethodsService()
+
+  /*val seq: Seq[Card] = Seq(Card(name_ = "Karta 1", cost_ = 5, count_ = 5, image_ = "url", rarity_ = "Legend"),
+                          Card(name_ = "Karta 2", cost_ = 7, count_ = 5, image_ = "url", rarity_ = "Legend"))
+  service.addCardsToDeck(seq, "Shaman")*/
+  //val test: Seq[Card] = service.getCardsFromDeck("Paladin")
 
   val resource = getClass.getResource("/fxml/MainWindow.fxml")
   if (resource == null) {

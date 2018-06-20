@@ -16,10 +16,10 @@ import scalaj.http.Http
 class DeckEditorController(protected var deckTableView: TableView[Card], protected val cardImageView: ImageView) {
 
   val cards = Seq[Card](
-    new Card("Alexstrasza ", 9, "legendary"
+/*    new Card("Alexstrasza ", 9, "legendary"
       , "https://d1u5p3l4wpay3k.cloudfront.net/hearthstone_gamepedia/thumb/b/b4/Alexstrasza%28303%29.png/200px-Alexstrasza%28303%29.png?version=c2e14cd0f7beca42513d8100860acb27", 1),
     new Card("Deathwing ", 10, "legendary"
-      , "https://d1u5p3l4wpay3k.cloudfront.net/hearthstone_gamepedia/thumb/d/df/Deathwing%28474%29.png/200px-Deathwing%28474%29.png?version=34418c4b5bfaf2ae24089756e01038a7", 2)
+      , "https://d1u5p3l4wpay3k.cloudfront.net/hearthstone_gamepedia/thumb/d/df/Deathwing%28474%29.png/200px-Deathwing%28474%29.png?version=34418c4b5bfaf2ae24089756e01038a7", 2)*/
   )
   val tableColumnName: TableColumn[Card, String] = new TableColumn[Card, String]("name")
   tableColumnName.cellValueFactory = {
@@ -75,9 +75,9 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
       val cost = fields.getOrElse("cost", "0").toString.toInt
       val img = fields.getOrElse("img", "").toString
       if (img != "") {
-        var card: Card = new Card(name, cost, rarity, img, 0)
+        var card: Card = new Card(name_ = name,cost_ = cost,rarity_ = rarity,image_ = img,count_ =  0)
       } else {
-        var card: Card = new Card(name, cost, rarity, "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", 0)
+        var card: Card = new Card(name_ = name,cost_ = cost,rarity_ = rarity,image_ =  "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", count_ =  0)
       }
     }
   })

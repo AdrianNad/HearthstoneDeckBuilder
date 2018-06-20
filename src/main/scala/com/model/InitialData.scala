@@ -13,11 +13,18 @@ trait InitialData {
   def insertInitialData(): Future[Unit] = {
     val queries = DBIO.seq(
       cards.delete, decks.delete,
-      decks += Deck(Some(1), "Deck 1"),
-      decks += Deck(Some(2), "Deck 2"),
+      decks += Deck(className =  "Warrior"),
+      decks += Deck(className = "Mage"),
+      decks += Deck(className = "Warlock"),
+      decks += Deck(className = "Shaman"),
+      decks += Deck(className = "Priest"),
+      decks += Deck(className = "Druid"),
+      decks += Deck(className = "Hunter"),
+      decks += Deck(className = "Rogue"),
+      decks += Deck(className = "Paladin")
 
-      cards += CardDb(1, "Card 1", 5, "Legend", "image URL", 5, 1),
-      cards += CardDb(2, "Card 2", 10, "Legend", "image URL", 5, 1)
+      /*cards += Card(name_ = "Karta 1", cost_ = 5, count_ = 5, image_ = "url", rarity_ = "Legend", deckId = Some(9)),
+      cards += Card(name_ = "Karta 2", cost_ = 7, count_ = 5, image_ = "url", rarity_ = "Legend", deckId = Some(9))*/
 
     )
     db.run(queries)

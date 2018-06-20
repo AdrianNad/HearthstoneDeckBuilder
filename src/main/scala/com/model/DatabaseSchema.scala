@@ -15,17 +15,17 @@ trait DatabaseSchema {
 
   val decks = TableQuery[Decks]
 
-  class Cards(tag: Tag) extends Table[CardDb](tag, "Card") {
+  class Cards(tag: Tag) extends Table[Card](tag, "Card") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def name = column[String]("name")
-    def cost = column[Int]("cost")
-    def rarity = column[String]("rarity")
-    def image = column[String]("image")
-    def quantity = column[Int]("quantity")
+    def name = column[String]("name_")
+    def cost = column[Int]("cost_")
+    def rarity = column[String]("rarity_")
+    def image = column[String]("image_")
+    def count = column[Int]("count_")
     def deckId = column[Long]("deckId")
     def deck = foreignKey("fk_deck", deckId, decks)(_.id)
 
-    def * = (id, name, cost, rarity, image, quantity, deckId) <> (CardDb.tupled, CardDb.unapply)
+    def * = (id.?, name, cost, rarity, image, count, deckId.?) <> (Card.tupled, Card.unapply)
   }
 
   val cards = TableQuery[Cards]
