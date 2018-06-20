@@ -5,6 +5,7 @@ import com.service.FullyPreparedMethodsService
 import scalafx.Includes._
 import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
+import scalafx.scene.chart.BarChart
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.image.ImageView
@@ -16,7 +17,7 @@ import spray.json.{JsValue, _}
 @sfxml
 class DeckEditorController(protected var deckTableView: TableView[Card], protected val cardImageView: ImageView
                            , protected var cardSearchTableView: TableView[Card], protected var cardCounterLabel: Label
-                           , protected var textFieldName: TextField) extends DeckEditorControllerInterface {
+                           , protected var textFieldName: TextField, protected var barChart: BarChart[Int, Int]) extends DeckEditorControllerInterface {
   var deckCardCounter: Int = 0
   var playerClass: String = _
   val database: FullyPreparedMethodsService = new FullyPreparedMethodsService
@@ -191,6 +192,7 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
   def clearPressed(): Unit = {
     deckTableView.getItems.clear()
     deckCardCounter = 0
+    cardCounterLabel.setText("0")
   }
 
   def searchPressed(): Unit = {

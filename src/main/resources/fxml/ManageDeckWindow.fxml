@@ -21,18 +21,18 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ImageView fx:id="imageViewWarrior" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewWarrior" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></ImageView>
-            <ImageView fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
-            <ImageView fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
-            <ImageView fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
-            <ImageView fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ImageView fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <ImageView fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
-            <ImageView fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <ImageView fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewWarlock" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewDruid" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewShaman" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewPaladin" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewMage" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewPriest" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewRogue" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ImageView style="-fx-cursor: hand;" fx:id="imageViewHunter" fitHeight="129.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>
