@@ -16,7 +16,7 @@ class FullyPreparedMethodsService {
   val hearthstoneService = new HearthstoneService(db)
 
   def getCardsFromDeck(className: String): Seq[Card] = {
-    val returnedCards: Future[Seq[Card]] = hearthstoneService.getCardsFromDeck("Paladin")
+    val returnedCards: Future[Seq[Card]] = hearthstoneService.getCardsFromDeck(className)
     Await.ready(returnedCards, Duration.Inf)
     val optionCards: Option[Try[Seq[Card]]] = returnedCards.value
     val result = optionCards.get

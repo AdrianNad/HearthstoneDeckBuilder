@@ -35,7 +35,7 @@ object HearthstoneDeckBuilderApp extends JFXApp with DatabaseSchema with Initial
   /*val seq: Seq[Card] = Seq(Card(name_ = "Karta 1", cost_ = 5, count_ = 5, image_ = "url", rarity_ = "Legend"),
                           Card(name_ = "Karta 2", cost_ = 7, count_ = 5, image_ = "url", rarity_ = "Legend"))
   service.addCardsToDeck(seq, "Shaman")*/
-  //val test: Seq[Card] = service.getCardsFromDeck("Paladin")
+  //val test: Seq[Card] = service.getCardsFromDeck("Priest")
 
   //service.deleteCardsFromDeck("Paladin")
 
