@@ -21,10 +21,10 @@ trait InitialData {
       decks += Deck(className = "Druid"),
       decks += Deck(className = "Hunter"),
       decks += Deck(className = "Rogue"),
-      decks += Deck(className = "Paladin")
+      decks += Deck(className = "Paladin"),
 
-      /*cards += Card(name_ = "Karta 1", cost_ = 5, count_ = 5, image_ = "url", rarity_ = "Legend", deckId = Some(9)),
-      cards += Card(name_ = "Karta 2", cost_ = 7, count_ = 5, image_ = "url", rarity_ = "Legend", deckId = Some(9))*/
+      cards += Card(name_ = "Karta 1", cost_ = 5, count_ = 5, image_ = "url", rarity_ = "Legend", deckId = Some(9)),
+      cards += Card(name_ = "Karta 2", cost_ = 7, count_ = 5, image_ = "url", rarity_ = "Legend", deckId = Some(9))
 
     )
     db.run(queries)

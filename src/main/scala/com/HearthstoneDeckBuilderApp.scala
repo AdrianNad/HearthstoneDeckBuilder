@@ -30,12 +30,14 @@ object HearthstoneDeckBuilderApp extends JFXApp with DatabaseSchema with Initial
   Await.ready(future, Duration.Inf)
   db.close()
 
-  val service: FullyPreparedMethodsService = new FullyPreparedMethodsService()
+  //val service: FullyPreparedMethodsService = new FullyPreparedMethodsService()
 
   /*val seq: Seq[Card] = Seq(Card(name_ = "Karta 1", cost_ = 5, count_ = 5, image_ = "url", rarity_ = "Legend"),
                           Card(name_ = "Karta 2", cost_ = 7, count_ = 5, image_ = "url", rarity_ = "Legend"))
   service.addCardsToDeck(seq, "Shaman")*/
   //val test: Seq[Card] = service.getCardsFromDeck("Paladin")
+
+  //service.deleteCardsFromDeck("Paladin")
 
   val resource = getClass.getResource("/fxml/MainWindow.fxml")
   if (resource == null) {
