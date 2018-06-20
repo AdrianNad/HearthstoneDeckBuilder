@@ -1,26 +1,24 @@
 package com.controller
 
 import com.model.Card
-import spray.json.{JsValue, _}
+import com.service.FullyPreparedMethodsService
 import scalafx.Includes._
 import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.control.{Label, TableColumn, TableRow, TableView}
-import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control._
+import scalafx.scene.image.ImageView
 import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
 import scalaj.http.Http
+import spray.json.{JsValue, _}
 
 @sfxml
 class DeckEditorController(protected var deckTableView: TableView[Card], protected val cardImageView: ImageView
                            , protected var cardSearchTableView: TableView[Card], protected var cardCounterLabel: Label) extends DeckEditorControllerInterface {
   var deckCardCounter: Int = 0
   var playerClass: String = _
-  val cards = Seq[Card](
-    new Card(name_ = "Alexstrasza ", cost_ = 9, rarity_ = "legendary"
-      , image_ = "https://d1u5p3l4wpay3k.cloudfront.net/hearthstone_gamepedia/thumb/b/b4/Alexstrasza%28303%29.png/200px-Alexstrasza%28303%29.png?version=c2e14cd0f7beca42513d8100860acb27", count_ = 1)
-  )
-
+  val database: FullyPreparedMethodsService = new FullyPreparedMethodsService
   def prepareTables(): Unit = {
     val tableColumnName: TableColumn[Card, String] = new TableColumn[Card, String]("name")
     tableColumnName.cellValueFactory = {
@@ -86,14 +84,14 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
               deckTableView.getItems.foreach(card => {
                 if (card.name_ == clickedCard.name_) {
                   isInDeckAlready = true
-                  if (card.rarity_ != "\"Legendary\"" && card.count_ < 2) {
+                  if (card.rarity_ != "Legendary" && card.count_ < 2) {
                     card.count_ += 1
                     card.count = new StringProperty(this, "cost", card.count_.toString)
                     deckTableView.refresh()
                     deckCardCounter += 1
                     cardCounterLabel.setText(deckCardCounter.toString)
                   } else {
-                    println("PRZEKROCZYLES LIMIT KART")
+                    new Alert(AlertType.Warning, "You've reached max number of card: " + card.name_).showAndWait()
                   }
                 }
               })
@@ -108,7 +106,7 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
             } else if (event.clickCount == 1) {
               //              cardImageView.setImage(new Image(row.getItem.image_))
             } else if (deckCardCounter == 30) {
-              println("30 to maksymalna liczba kart w talii")
+              new Alert(AlertType.Warning, "You've reached max number of cards").showAndWait()
             }
           }
         }
@@ -131,7 +129,6 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
     val cardsAll = ObservableBuffer[Card]()
     var response = Http("https://irythia-hs.p.mashape.com/cards")
       .header("X-Mashape-Key", "UdPl9JESCImshHjThNPHpjkGtMqkp1azcuGjsnMjcx078Gd7Z0").asString
-    //  println(response.body)
     val json: JsValue = response.body.parseJson
     val jsonArray: JsArray = json.asInstanceOf[JsArray]
     jsonArray.elements.foreach(x => {
@@ -139,9 +136,9 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
       val cardClass = fields.getOrElse("card_class", "").toString
       if (cardClass == playerClass || cardClass == "null") {
         val name = fields.getOrElse("name", "name").toString.replace("\"", "")
-        val rarity = fields.getOrElse("rarity", "rarity").toString
+        val rarity = fields.getOrElse("rarity", "rarity").toString.replace("\"", "")
         val cost = fields.getOrElse("cost", "0").toString.toInt
-        val img = fields.getOrElse("img", "").toString
+        val img = fields.getOrElse("img", "").toString.replace("\"", "")
         if (img != "") {
           var card: Card = new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = img, count_ = 0)
           cardsAll add card
@@ -156,11 +153,22 @@ class DeckEditorController(protected var deckTableView: TableView[Card], protect
 
   def fillTable(playerClass: String): Unit = {
     val deckCards = ObservableBuffer[Card]()
+    var cards = database.getCardsFromDeck(playerClass)
     cards.foreach(c => {
       deckCards add c
     })
     deckTableView.items = deckCards
     deckCardCounter = deckTableView.getItems.size()
     cardCounterLabel.setText(deckCardCounter.toString)
+  }
+
+  def savePressed(): Unit = {
+    database.deleteCardsFromDeck(playerClass)
+    database.addCardsToDeck(deckTableView.getItems, playerClass)
+  }
+
+  def clearPressed(): Unit = {
+    deckTableView.getItems.clear()
+    deckCardCounter = 0
   }
 }
