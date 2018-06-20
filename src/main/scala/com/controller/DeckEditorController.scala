@@ -2,91 +2,165 @@ package com.controller
 
 import com.model.Card
 import spray.json.{JsValue, _}
-
 import scalafx.Includes._
 import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.control.{TableColumn, TableRow, TableView}
+import scalafx.scene.control.{Label, TableColumn, TableRow, TableView}
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseEvent
 import scalafxml.core.macros.sfxml
 import scalaj.http.Http
 
 @sfxml
-class DeckEditorController(protected var deckTableView: TableView[Card], protected val cardImageView: ImageView) {
-
+class DeckEditorController(protected var deckTableView: TableView[Card], protected val cardImageView: ImageView
+                           , protected var cardSearchTableView: TableView[Card], protected var cardCounterLabel: Label) extends DeckEditorControllerInterface {
+  var deckCardCounter: Int = 0
+  var playerClass: String = _
   val cards = Seq[Card](
-/*    new Card("Alexstrasza ", 9, "legendary"
-      , "https://d1u5p3l4wpay3k.cloudfront.net/hearthstone_gamepedia/thumb/b/b4/Alexstrasza%28303%29.png/200px-Alexstrasza%28303%29.png?version=c2e14cd0f7beca42513d8100860acb27", 1),
-    new Card("Deathwing ", 10, "legendary"
-      , "https://d1u5p3l4wpay3k.cloudfront.net/hearthstone_gamepedia/thumb/d/df/Deathwing%28474%29.png/200px-Deathwing%28474%29.png?version=34418c4b5bfaf2ae24089756e01038a7", 2)*/
+    new Card(name_ = "Alexstrasza ", cost_ = 9, rarity_ = "legendary"
+      , image_ = "https://d1u5p3l4wpay3k.cloudfront.net/hearthstone_gamepedia/thumb/b/b4/Alexstrasza%28303%29.png/200px-Alexstrasza%28303%29.png?version=c2e14cd0f7beca42513d8100860acb27", count_ = 1)
   )
-  val tableColumnName: TableColumn[Card, String] = new TableColumn[Card, String]("name")
-  tableColumnName.cellValueFactory = {
-    _.value.name
-  }
-  val tableColumnCost: TableColumn[Card, String] = new TableColumn[Card, String]("cost")
-  tableColumnCost.cellValueFactory = {
-    _.value.cost
-  }
-  val tableColumnCount: TableColumn[Card, String] = new TableColumn[Card, String]("count")
-  tableColumnCount.cellValueFactory = {
-    _.value.count
-  }
 
-  deckTableView.getColumns.addAll(tableColumnName, tableColumnCost, tableColumnCount)
-  deckTableView.rowFactory = (tv) => {
-    def call(tv: TableView[Card]): TableRow[Card] = {
-      var row = new TableRow[Card]()
-      row.onMouseClicked = (event: MouseEvent) => {
-        if (row.getItem != null) {
-          if (event.clickCount == 2) {
-            row.getItem.count_ = row.getItem.count_ - 1
-            row.getItem.count = new StringProperty(this, "cost", row.getItem.count_.toString)
-            deckTableView.refresh()
-            if (row.getItem.count_ == 0) {
-              deckTableView.getItems.remove(deckTableView.getSelectionModel.getSelectedItem)
+  def prepareTables(): Unit = {
+    val tableColumnName: TableColumn[Card, String] = new TableColumn[Card, String]("name")
+    tableColumnName.cellValueFactory = {
+      _.value.name
+    }
+    val tableColumnCost: TableColumn[Card, String] = new TableColumn[Card, String]("cost")
+    tableColumnCost.cellValueFactory = {
+      _.value.cost
+    }
+    val tableColumnCount: TableColumn[Card, String] = new TableColumn[Card, String]("count")
+    tableColumnCount.cellValueFactory = {
+      _.value.count
+    }
+
+    val tableColumnNameCard: TableColumn[Card, String] = new TableColumn[Card, String]("name")
+    tableColumnNameCard.cellValueFactory = {
+      _.value.name
+    }
+    val tableColumnCostCard: TableColumn[Card, String] = new TableColumn[Card, String]("cost")
+    tableColumnCostCard.cellValueFactory = {
+      _.value.cost
+    }
+    deckTableView.getColumns.addAll(tableColumnName, tableColumnCost, tableColumnCount)
+    cardSearchTableView.getColumns.addAll(tableColumnNameCard, tableColumnCostCard)
+
+    deckTableView.rowFactory = (tv) => {
+      def call(tv: TableView[Card]): TableRow[Card] = {
+        var row = new TableRow[Card]()
+        row.onMouseClicked = (event: MouseEvent) => {
+          if (row.getItem != null) {
+            if (event.clickCount == 2) {
+              row.getItem.count_ = row.getItem.count_ - 1
+              row.getItem.count = new StringProperty(this, "cost", row.getItem.count_.toString)
+              deckTableView.refresh()
+              if (row.getItem.count_ == 0) {
+                deckTableView.getItems.remove(deckTableView.getSelectionModel.getSelectedItem)
+              }
+              deckCardCounter -= 1
+              cardCounterLabel.setText(deckCardCounter.toString)
+              if (deckTableView.getItems.size() == 0) {
+                //                cardImageView.setImage(null)
+              }
+            } else if (event.clickCount == 1) {
+              //              cardImageView.setImage(new Image(row.getItem.image_))
             }
-            if (deckTableView.getItems.size() == 0) {
-              cardImageView.setImage(null)
-            }
-          } else if (event.clickCount == 1) {
-            cardImageView.setImage(new Image(row.getItem.image_))
           }
         }
+        deckTableView.refresh()
+        row
       }
-      row
+
+      call(tv)
     }
 
-    call(tv)
+    cardSearchTableView.rowFactory = (tv) => {
+      def call(tv: TableView[Card]): TableRow[Card] = {
+        var row = new TableRow[Card]()
+        row.onMouseClicked = (event: MouseEvent) => {
+          if (row.getItem != null) {
+            if (event.clickCount == 2 && deckCardCounter < 30) {
+              var clickedCard: Card = row.getItem
+              var isInDeckAlready: Boolean = false
+              deckTableView.getItems.foreach(card => {
+                if (card.name_ == clickedCard.name_) {
+                  isInDeckAlready = true
+                  if (card.rarity_ != "\"Legendary\"" && card.count_ < 2) {
+                    card.count_ += 1
+                    card.count = new StringProperty(this, "cost", card.count_.toString)
+                    deckTableView.refresh()
+                    deckCardCounter += 1
+                    cardCounterLabel.setText(deckCardCounter.toString)
+                  } else {
+                    println("PRZEKROCZYLES LIMIT KART")
+                  }
+                }
+              })
+              if (!isInDeckAlready) {
+                clickedCard.count_ = 1
+                clickedCard.count = new StringProperty(this, "cost", clickedCard.count_.toString)
+                deckTableView.getItems.add(clickedCard)
+                deckTableView.refresh()
+                deckCardCounter += 1
+                cardCounterLabel.setText(deckCardCounter.toString)
+              }
+            } else if (event.clickCount == 1) {
+              //              cardImageView.setImage(new Image(row.getItem.image_))
+            } else if (deckCardCounter == 30) {
+              println("30 to maksymalna liczba kart w talii")
+            }
+          }
+        }
+        row
+      }
+
+      call(tv)
+    }
   }
 
-  var response = Http("https://irythia-hs.p.mashape.com/cards")
-    .header("X-Mashape-Key", "UdPl9JESCImshHjThNPHpjkGtMqkp1azcuGjsnMjcx078Gd7Z0").asString
-  //  println(response.body)
-  val json: JsValue = response.body.parseJson
-  val jsonArray: JsArray = json.asInstanceOf[JsArray]
-  jsonArray.elements.foreach(x => {
-    val fields = x.asInstanceOf[JsObject].fields
-    val cardClass = fields.getOrElse("card_class", "").toString
-    if (cardClass == "Warrior" || cardClass == "null") {
-      val name = fields.getOrElse("name", "name").toString
-      val rarity = fields.getOrElse("rarity", "rarity").toString
-      val cost = fields.getOrElse("cost", "0").toString.toInt
-      val img = fields.getOrElse("img", "").toString
-      if (img != "") {
-        var card: Card = new Card(name_ = name,cost_ = cost,rarity_ = rarity,image_ = img,count_ =  0)
-      } else {
-        var card: Card = new Card(name_ = name,cost_ = cost,rarity_ = rarity,image_ =  "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", count_ =  0)
-      }
-    }
-  })
-  fillTable()
-  def fillTable(): Unit = {
+  def setPlayerClass(playerClass: String): Unit = {
+    prepareTables()
+    this.playerClass = playerClass
+    fillCards(playerClass)
+    fillTable(playerClass)
+  }
+
+
+  def fillCards(playerClass: String) {
     val cardsAll = ObservableBuffer[Card]()
-    cards.foreach(c => {
-      cardsAll add c
+    var response = Http("https://irythia-hs.p.mashape.com/cards")
+      .header("X-Mashape-Key", "UdPl9JESCImshHjThNPHpjkGtMqkp1azcuGjsnMjcx078Gd7Z0").asString
+    //  println(response.body)
+    val json: JsValue = response.body.parseJson
+    val jsonArray: JsArray = json.asInstanceOf[JsArray]
+    jsonArray.elements.foreach(x => {
+      val fields = x.asInstanceOf[JsObject].fields
+      val cardClass = fields.getOrElse("card_class", "").toString
+      if (cardClass == playerClass || cardClass == "null") {
+        val name = fields.getOrElse("name", "name").toString.replace("\"", "")
+        val rarity = fields.getOrElse("rarity", "rarity").toString
+        val cost = fields.getOrElse("cost", "0").toString.toInt
+        val img = fields.getOrElse("img", "").toString
+        if (img != "") {
+          var card: Card = new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = img, count_ = 0)
+          cardsAll add card
+        } else {
+          var card: Card = new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", count_ = 0)
+          cardsAll add new Card(name_ = name, cost_ = cost, rarity_ = rarity, image_ = "https://firstfiveeight.com.au/wp-content/uploads/2018/05/image-default.png", count_ = 0)
+        }
+      }
     })
-    deckTableView.items = cardsAll
+    cardSearchTableView.items = cardsAll
+  }
+
+  def fillTable(playerClass: String): Unit = {
+    val deckCards = ObservableBuffer[Card]()
+    cards.foreach(c => {
+      deckCards add c
+    })
+    deckTableView.items = deckCards
+    deckCardCounter = deckTableView.getItems.size()
+    cardCounterLabel.setText(deckCardCounter.toString)
   }
 }
